@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Project } = require('../models');
+const { Project, User } = require('../models');
 
 // GET all projects for homepage
 router.get('/', async (req, res) => {
@@ -7,8 +7,8 @@ router.get('/', async (req, res) => {
         const dbProjectData = await Project.findAll({
             include: [
                 {
-                    model: Project,
-                    attributes: ['name', 'date_created', 'description'],
+                    model: User,
+                    attributes: ['name'],
                 },
             ],
         });
@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 
         res.render('homepage', {
             projects,
-            loggedIn: req.session.loggedIn,
+            loggedIn: req.session.loggedIn
         });
     } catch (err) {
         console.log(err);
