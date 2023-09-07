@@ -7,8 +7,8 @@ router.get('/', async (req, res) => {
         const dbProjectData = await Project.findAll({
             include: [
                 {
-                    model: User,
-                    attributes: ['name'],
+                    model: Project,
+                    attributes: ['name', 'description', 'date_created'],
                 },
             ],
         });
