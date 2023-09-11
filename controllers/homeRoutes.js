@@ -30,7 +30,7 @@ router.get('/', async (req, res) => {
 // GET one project
 router.get('/project/:id', async (req, res) => {
         try {
-            const projectData = await Project.findByPk(req.params.id, {
+            const dbprojectData = await Project.findByPk(req.params.id, {
                 include: [
                     {
                     model: User,
@@ -39,40 +39,40 @@ router.get('/project/:id', async (req, res) => {
                 ],
             });
 
-            const project = projectData.get({ plain: true });
+            const project = dbprojectData.get({ plain: true });
 
             res.render('project', {
                 ...project,
-                logged_in: req.session.loggedIn
+                logged_in: req.session.logged_in
             });
         } catch (err) {
             res.status(500).json(err);
         }
 });
 
-// GET one painting
-router.get('/painting/:id', async (req, res) => {
-    // If the user is not logged in, redirect the user to the login page
-    if (!req.session.loggedIn) {
-        res.redirect('/login');
-    } else {
-        // If the user is logged in, allow them to view the painting
-        try {
-            const dbPaintingData = await Painting.findByPk(req.params.id);
+// GET request to the user profile using withAuth middleware along with login to prevent access from non logged in users.
+router.get('/profile', withAuth, async (req, res) => {
+    try {
+        const userLogin = await User.findByPk(req.session.user.id, {
+            attributes: { exclude: ['password'] },
+            include: [{ model: Project }],
+        });
 
-            const painting = dbPaintingData.get({ plain: true });
+        const user = userLogin.get({ plain: true });
 
-            res.render('painting', { painting, loggedIn: req.session.loggedIn });
-        } catch (err) {
-            console.log(err);
-            res.status(500).json(err);
-        }
+        res.render('profile', {
+            ...user,
+            logged_in: true
+    
+        });
+    } catch (err) {
+        res.status(500).json(err);
     }
 });
 
 router.get('/login', (req, res) => {
-    if (req.session.loggedIn) {
-        res.redirect('/');
+    if (req.session.logged_in) {
+        res.redirect('/profile');
         return;
     }
 
