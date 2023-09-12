@@ -53,7 +53,7 @@ router.get('/project/:id', async (req, res) => {
 // GET request to the user profile using withAuth middleware along with login to prevent access from non logged in users.
 router.get('/profile', withAuth, async (req, res) => {
     try {
-        const userLogin = await User.findByPk(req.session.user.id, {
+        const userLogin = await User.findByPk(req.session.user_id, {
             attributes: { exclude: ['password'] },
             include: [{ model: Project }],
         });
