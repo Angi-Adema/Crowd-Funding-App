@@ -27,7 +27,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-// GET one project
+// GET one project to show on the homepage.
 router.get('/project/:id', async (req, res) => {
         try {
             const dbprojectData = await Project.findByPk(req.params.id, {
@@ -61,7 +61,7 @@ router.get('/profile', withAuth, async (req, res) => {
         const user = userLogin.get({ plain: true });
 
         res.render('profile', {
-            ...user,
+            ...users,
             logged_in: true
     
         });
