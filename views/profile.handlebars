@@ -1,15 +1,15 @@
-<div class="row">
-  <div class="col-auto">
+<div>
+  <div>
     <h2>Welcome, {{name}}!</h2>
   </div>
 </div>
 
-<div class="row mt-4">
-  <div class="col-md-6">
+<div>
+  <div>
     <h3>Create a New Project:</h3>
 
-    <form class="form new-project-form">
-      <div class="form-group">
+    <form>
+      <div>
         <label for="project-name">project name:</label>
         <input class="form-input" type="text" id="project-name" name="project-name" />
       </div>
@@ -28,15 +28,15 @@
   </div>
 
   {{#if projects.length}}
-  <div class="col-md-6 project-list">
+  <div>
     <h3>Current Projects:</h3>
 
     {{#each projects as |project|}}
-    <div class="row mb-2">
-      <div class="col-md-8">
+    <div>
+      <div>
         <h4><a href="/project/{{project.id}}">{{project.name}}</a></h4>
       </div>
-      <div class="col-md-4">
+      <div>
         <button class="btn btn-sm btn-danger" data-id="{{project.id}}">DELETE</button>
       </div>
     </div>
