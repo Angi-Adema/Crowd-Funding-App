@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { Project } = require('../../models');
 const withAuth = require('../../utils/auth');
 
+// GET request requiring the user to have authorization to post a new project so that only logged in users can create new projects.
 router.post('/', withAuth, async (req, res) => {
   try {
     const newProject = await Project.create({
