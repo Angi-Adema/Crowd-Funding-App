@@ -4,18 +4,19 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Fund-Me</title>
+    <title>Crowd-Funding-App</title>
     <link rel="stylesheet" type="text/css" href="/css/jass.css">
     <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 
 <body>
     <header>
-        <h1>Welcome to Project Fund Me</h1>
+        <h1>Welcome to the Crowd Funding App!</h1>
     </header>
     <nav>
-        <a href="/">Home</a>
+        <a href="/">Home</a> |
         {{#if loggedIn}}
+        <a href="/profile">Profile</a> |
         <button id="logout" class="btn-no-style">Logout</button>
         {{else}}
         <a href="/login">Login</a>
