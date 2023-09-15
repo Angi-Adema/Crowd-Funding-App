@@ -1,88 +1,81 @@
 const router = require('express').Router();
-const { Project } = require('../models');
+const { Project, User } = require('../models');
+const withAuth = require('../utils/auth');
 
 // GET all projects for homepage
 router.get('/', async (req, res) => {
-    try {
-        const dbProjectData = await Project.findAll({
-            include: [
-                {
-                    model: Project,
-                    attributes: ['name', 'date_created', 'description'],
-                },
-            ],
-        });
+  try {
+    const dbProjectData = await Project.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ['name'],
+        },
+      ],
+    });
 
-        const projects = dbProjectData.map((project) =>
-            project.get({ plain: true })
-        );
+    const projects = dbProjectData.map((project) =>
+      project.get({ plain: true })
+    );
 
-        res.render('homepage', {
-            projects,
-            loggedIn: req.session.loggedIn,
-        });
-    } catch (err) {
-        console.log(err);
-        res.status(500).json(err);
-    }
+    res.render('homepage', {
+      projects,
+      logged_in: req.session.logged_in,
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 // GET one project
 router.get('/project/:id', async (req, res) => {
-    // If the user is not logged in, redirect the user to the login page
-    if (!req.session.loggedIn) {
-        res.redirect('/login');
-    } else {
-        // If the user is logged in, allow them to view the gallery
-        try {
-            const dbProjectData = await Project.findByPk(req.params.id, {
-                include: [
-                    {
-                        model: Project,
-                        attributes: [
-                            'id',
-                            'name',
-                            'description',
-                        ],
-                    },
-                ],
-            });
-            const gallery = dbGalleryData.get({ plain: true });
-            res.render('gallery', { gallery, loggedIn: req.session.loggedIn });
-        } catch (err) {
-            console.log(err);
-            res.status(500).json(err);
-        }
-    }
+  try {
+    const dbProjectData = await Project.findByPk(req.params.id, {
+      include: [
+        {
+          model: User,
+          attributes: ['name'],
+        },
+      ],
+    });
+
+    const project = dbProjectData.get({ plain: true });
+
+    res.render('project', {
+      ...project,
+      logged_in: req.session.logged_in,
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
-// GET one painting
-router.get('/painting/:id', async (req, res) => {
-    // If the user is not logged in, redirect the user to the login page
-    if (!req.session.loggedIn) {
-        res.redirect('/login');
-    } else {
-        // If the user is logged in, allow them to view the painting
-        try {
-            const dbPaintingData = await Painting.findByPk(req.params.id);
+// GET route for profile that requires the user to be logged in and authorized to access their profile.
+router.get('/profile', withAuth, async (req, res) => {
+  try {
+    const dbUserData = await User.findByPk(req.session.user_id, {
+      attributes: { exclude: ['password'] },
+      include: [{ model: Project }],
+    });
 
-            const painting = dbPaintingData.get({ plain: true });
+    const user = dbUserData.get({ plain: true });
 
-            res.render('painting', { painting, loggedIn: req.session.loggedIn });
-        } catch (err) {
-            console.log(err);
-            res.status(500).json(err);
-        }
-    }
+    res.render('profile', {
+      ...user,
+      logged_in: true,
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 router.get('/login', (req, res) => {
-    if (req.session.loggedIn) {
-        res.redirect('/');
-        return;
-    }
+  if (req.session.logged_in) {
+    res.redirect('/profile');
+    return;
+  }
 
-    res.render('login');
+  res.render('login');
 });
 
 module.exports = router;
