@@ -62,7 +62,7 @@ router.get('/profile', withAuth, async (req, res) => {
 
     res.render('profile', {
       ...user,
-      logged_in: req.session.logged_in
+      logged_in: true   // req.session.logged_in
     });
   } catch (err) {
     res.status(500).json(err);
