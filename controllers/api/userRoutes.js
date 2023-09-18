@@ -3,13 +3,12 @@ const { User } = require('../../models');
 
 router.post('/', async (req, res) => {
   try {
-    const userData = await User.create({...req.body, userType: 'admin'});
-
+    const userData = await User.create(req.body);  // To add an admin we would have {...req.body}, userType: 'admin' inside the curly braces.
     req.session.save(() => {
       req.session.user_id = userData.id;
       req.session.name = userData.name;
       req.session.logged_in = true;
-      req.session.userType = userData.userType;
+      // req.session.userType = userData.userType; - for admin user.
 
       res.status(200).json(userData);
     });
@@ -42,7 +41,7 @@ router.post('/login', async (req, res) => {
       req.session.user_id = userData.id;
       req.session.name = userData.name;
       req.session.logged_in = true;
-      req.session.userType = userData.userType;
+      // req.session.userType = userData.userType; - to add admin user.
       
       res.json({ user: userData, message: 'You are now logged in!' });
     });
