@@ -35,6 +35,10 @@ User.init(
         len: [8],
       },
     },
+    userType: {
+      type: DataTypes.STRING,
+      defaultValue: 'user',
+    }
   },
   {
     hooks: {
