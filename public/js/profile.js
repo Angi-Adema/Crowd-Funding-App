@@ -43,5 +43,5 @@ const newFormHandler = async (event) => {
     .addEventListener('submit', newFormHandler);
   
   document
-    .querySelector('.project-list')
+    .querySelector('.delete')
     .addEventListener('click', delButtonHandler);
